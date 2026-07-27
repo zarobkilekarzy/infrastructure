@@ -13,6 +13,9 @@ resource "cloudflare_workers_kv_namespace" "sonda" {
 resource "cloudflare_d1_database" "clicks" {
   account_id = var.cloudflare_account_id
   name       = "zarobki-clicks"
+  read_replication = {
+    mode = "disabled" # stan bieżący — bez replik
+  }
 }
 
 # Pages — projekt hostujący stronę. Assety wgrywa CI (`wrangler pages deploy`),

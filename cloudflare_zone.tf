@@ -1,12 +1,10 @@
 # cloudflare_zone.tf — ustawienia strefy (bezpieczeństwo transportu).
 #
-# W v5 każde ustawienie to osobny zasób cloudflare_zone_setting (setting_id).
-# Adoptujemy istniejące wartości przez import; PIERWSZY `tofu plan` pokaże, czy
-# zadeklarowane wartości zgadzają się z rzeczywistością — zreconciliuj różnice.
+# Wartości USTAWIONE = BIEŻĄCA rzeczywistość (adopcja bez zmian). Hardening jest
+# świadomą decyzją na później — zmień wartość, a plan pokaże diff:
+#   min_tls "1.0" -> "1.2" | ssl "full" -> "strict" (wymaga certu origin) |
+#   HSTS nosniff false -> true.
 
-# HSTS — Strict-Transport-Security. Wg CLAUDE.md: 6 mies., includeSubDomains,
-# bez preload (dotąd trzymane w panelu; tofu staje się jedynym źródłem prawdy).
-# UWAGA: dokładny kształt obiektu `value` potwierdź na pierwszym planie.
 resource "cloudflare_zone_setting" "hsts" {
   zone_id    = var.cloudflare_zone_id
   setting_id = "security_header"
@@ -16,7 +14,7 @@ resource "cloudflare_zone_setting" "hsts" {
       max_age            = 15552000 # 6 miesięcy
       include_subdomains = true
       preload            = false
-      nosniff            = true
+      nosniff            = false # stan bieżący; hardening: true
     }
   }
 }
@@ -24,7 +22,7 @@ resource "cloudflare_zone_setting" "hsts" {
 resource "cloudflare_zone_setting" "ssl" {
   zone_id    = var.cloudflare_zone_id
   setting_id = "ssl"
-  value      = "strict" # potwierdź: "full" vs "strict"
+  value      = "full" # stan bieżący; hardening: "strict"
 }
 
 resource "cloudflare_zone_setting" "always_use_https" {
@@ -36,7 +34,7 @@ resource "cloudflare_zone_setting" "always_use_https" {
 resource "cloudflare_zone_setting" "min_tls" {
   zone_id    = var.cloudflare_zone_id
   setting_id = "min_tls_version"
-  value      = "1.2"
+  value      = "1.0" # stan bieżący; hardening: "1.2"
 }
 
 resource "cloudflare_zone_setting" "auto_https_rewrites" {

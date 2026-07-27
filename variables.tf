@@ -3,8 +3,7 @@
 
 variable "cloudflare_account_id" {
   type        = string
-  description = "ID konta Cloudflare — dla zasobów account-scoped (Pages, KV, D1, Turnstile, Web Analytics, adresy Email Routing)."
-  sensitive   = true
+  description = "ID konta Cloudflare — dla zasobów account-scoped (Pages, KV, D1, Turnstile, Web Analytics, adresy Email Routing). Nietajne (losowy identyfikator), ale trzymane w secrets.auto.tfvars poza repo. NIE sensitive — inaczej nie da się użyć w import.id."
 }
 
 variable "cloudflare_zone_id" {

@@ -1,5 +1,4 @@
-# outputs.tf — przydatne identyfikatory. Wartości mogące być wrażliwe oznaczone
-# sensitive (nie pokażą się w logu planu/apply).
+# outputs.tf — przydatne identyfikatory.
 
 output "pages_project_name" {
   description = "Nazwa projektu Cloudflare Pages."
@@ -21,8 +20,4 @@ output "turnstile_sitekey" {
   value       = cloudflare_turnstile_widget.site.sitekey
 }
 
-output "web_analytics_site_token" {
-  description = "Token beacona Web Analytics."
-  value       = cloudflare_web_analytics_site.site.site_token
-  sensitive   = true
-}
+# web_analytics_site_token — ODROCZONE razem z zasobem (patrz cloudflare_analytics.tf).

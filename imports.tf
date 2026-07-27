@@ -1,12 +1,7 @@
-# imports.tf — adopcja istniejących zasobów, żeby tofu nimi ZARZĄDZAŁ zamiast
-# tworzyć od nowa. Bloki import są deklaratywne: po udanym apply można je usunąć.
-# Alternatywa proceduralna: `tofu import ...` (README → „Import ręczny").
-#
-# ID zasobów, których nie znam bez tokenu, są zakomentowane — uzupełnij po
-# pierwszym odczycie (README → „Adopcja e-mail / DNS przez generator").
+# imports.tf — adopcja istniejących zasobów (ID odczytane z Cloudflare).
+# Po udanym apply bloki można usunąć. GitHub i Web Analytics: patrz „ODROCZONE".
 
-# --- Cloudflare: znane ID (KV/D1 publiczne w wrangler.toml repo strony) ---
-
+# --- Cloudflare Pages + magazyny ---
 import {
   to = cloudflare_workers_kv_namespace.sonda
   id = "${var.cloudflare_account_id}/e25a5a621f954438aec987306b069f1e"
@@ -22,13 +17,38 @@ import {
   id = "${var.cloudflare_account_id}/zarobkilekarzy"
 }
 
+# --- Email Routing ---
 import {
   to = cloudflare_email_routing_settings.this
   id = var.cloudflare_zone_id
 }
 
-# --- Cloudflare: ustawienia strefy (import id: "<zone_id>/<setting_id>") ---
+import {
+  to = cloudflare_email_routing_address.destination
+  id = "${var.cloudflare_account_id}/840f19b2d83742b68c32de7a8f96b7b7"
+}
 
+import {
+  to = cloudflare_email_routing_rule.fwd["social"]
+  id = "${var.cloudflare_zone_id}/7b8249d12acf4fa490318ec7ecd4c9a0"
+}
+
+import {
+  to = cloudflare_email_routing_rule.fwd["zglos"]
+  id = "${var.cloudflare_zone_id}/a71bbf97336d4009a03fc8a02caf2817"
+}
+
+import {
+  to = cloudflare_email_routing_rule.fwd["sprostowania"]
+  id = "${var.cloudflare_zone_id}/7ab90748d9d0429d8d0cb4e2897bae49"
+}
+
+import {
+  to = cloudflare_email_routing_rule.fwd["kontakt"]
+  id = "${var.cloudflare_zone_id}/a669bb4ea28b401e83f992f9ca3fac07"
+}
+
+# --- Ustawienia strefy (id: "<zone_id>/<setting_id>") ---
 import {
   to = cloudflare_zone_setting.hsts
   id = "${var.cloudflare_zone_id}/security_header"
@@ -54,42 +74,15 @@ import {
   id = "${var.cloudflare_zone_id}/automatic_https_rewrites"
 }
 
-# --- GitHub: istniejące repozytoria (import id = nazwa repo) ---
-
+# --- Turnstile ---
 import {
-  to = github_repository.site
-  id = "zarobkilekarzy.pl"
+  to = cloudflare_turnstile_widget.site
+  id = "${var.cloudflare_account_id}/0x4AAAAAADnUz5UDjEbs9pOx"
 }
 
-import {
-  to = github_repository.fedrowanie
-  id = "fedrowanie"
-}
-
-# --- Do uzupełnienia po odczycie z tokenem (ID nieznane offline) ---
-#
-# import {
-#   to = cloudflare_email_routing_address.destination
-#   id = "${var.cloudflare_account_id}/<address_id>"
-# }
-#
-# import {
-#   to = cloudflare_email_routing_catch_all.this
-#   id = var.cloudflare_zone_id
-# }
-#
-# import {
-#   to = cloudflare_turnstile_widget.site
-#   id = "${var.cloudflare_account_id}/<sitekey>"   # sitekey = publiczny TURNSTILE_SITE_KEY
-# }
-#
-# import {
-#   to = cloudflare_web_analytics_site.site
-#   id = "${var.cloudflare_account_id}/<site_id>"
-# }
-#
-# Jeśli repo `infrastructure` już istnieje na GitHubie (utworzone wcześniej):
-# import {
-#   to = github_repository.infrastructure
-#   id = "infrastructure"
-# }
+# --- ODROCZONE ---
+# Web Analytics: brak site_id (token bez „Account Analytics: Read").
+# GitHub: repo istnieją, ale App bez „Administration" — po rozszerzeniu:
+#   import { to = github_repository.site           id = "zarobkilekarzy.pl" }
+#   import { to = github_repository.fedrowanie     id = "fedrowanie" }
+#   import { to = github_repository.infrastructure id = "infrastructure" }
