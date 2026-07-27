@@ -86,3 +86,45 @@ import {
 #   import { to = github_repository.site           id = "zarobkilekarzy.pl" }
 #   import { to = github_repository.fedrowanie     id = "fedrowanie" }
 #   import { to = github_repository.infrastructure id = "infrastructure" }
+
+# --- DNS (zaadoptowane) ---
+
+import {
+  to = cloudflare_dns_record.root
+  id = "${var.cloudflare_zone_id}/b6a15f78d53230ec151e56a8c2fb5128"
+}
+
+import {
+  to = cloudflare_dns_record.mx3
+  id = "${var.cloudflare_zone_id}/05e51443f9759a7d88365e97a3cbf918"
+}
+
+import {
+  to = cloudflare_dns_record.mx2
+  id = "${var.cloudflare_zone_id}/071991d7623f133b78befeb2568ea020"
+}
+
+import {
+  to = cloudflare_dns_record.mx1
+  id = "${var.cloudflare_zone_id}/100589059448d28a4cc40419d994bb72"
+}
+
+import {
+  to = cloudflare_dns_record.dkim
+  id = "${var.cloudflare_zone_id}/39758149d7459d8a80fb23aca09b18ef"
+}
+
+import {
+  to = cloudflare_dns_record.dmarc
+  id = "${var.cloudflare_zone_id}/b97a9fd914baeca68d032a0bd8a041f1"
+}
+
+import {
+  to = cloudflare_dns_record.google_verify
+  id = "${var.cloudflare_zone_id}/a03a2928c86d51a17375ce8d4acf14f6"
+}
+
+import {
+  to = cloudflare_dns_record.spf
+  id = "${var.cloudflare_zone_id}/269ef266bda8a29e109112ab33297036"
+}
