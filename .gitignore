@@ -1,0 +1,29 @@
+# === STAN TOFU — zawiera sekrety i docelowy e-mail. NIGDY do repo. ===
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+crash.*.log
+
+# === WARTOŚCI WRAŻLIWE ===
+# Wszystkie *.auto.tfvars i secrets*.tfvars zostają lokalnie; szablon .example
+# jest jedynym plikiem tfvars, który wolno commitować.
+secrets.auto.tfvars
+*.auto.tfvars
+*.tfvars
+!*.tfvars.example
+
+# Konfiguracja wygenerowana z importu — rewiduj, potem wklej do właściwego pliku.
+*.generated.tf
+
+# Klucze prywatne (np. .pem GitHub App).
+*.pem
+
+# Lokalne, nie do publikacji (wrażliwe szczegóły operacyjne, config agenta,
+# helpery uruchomieniowe wstrzykujące token).
+CLAUDE.md
+.claude/
+tofu-env.sh
+
+# System
+.DS_Store

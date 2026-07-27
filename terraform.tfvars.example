@@ -1,0 +1,18 @@
+# Szablon zmiennych. Skopiuj do secrets.auto.tfvars (gitignored) i uzupełnij:
+#
+#   cp terraform.tfvars.example secrets.auto.tfvars
+#
+# Token Cloudflare NIE tu — eksportuj go jako zmienną środowiskową:
+#   export CLOUDFLARE_API_TOKEN="..."
+
+cloudflare_account_id      = "REPLACE_account_id"
+cloudflare_zone_id         = "REPLACE_zone_id"
+email_forward_destination  = "REPLACE_prywatny_email"   # wrażliwe — zostaje lokalnie
+
+github_app_id              = "REPLACE_app_id"
+github_app_installation_id = "REPLACE_installation_id"
+github_app_pem_path        = "~/secrets/REPLACE.pem"
+
+# Opcjonalnie — jeśli tofu ma też zarządzać sekretem CI do deployu Pages.
+# Zostaw zakomentowane, żeby tofu nie dotykał sekretów Actions.
+# cloudflare_deploy_api_token = "REPLACE_ci_token"
