@@ -1,56 +1,146 @@
-# github.tf — zasoby GitHub organizacji (provider = GitHub App, patrz providers.tf).
-#
-# ODROCZONE do czasu rozszerzenia uprawnień App. Obecnie App ma tylko
-# actions/contents/workflows=write + metadata=read — BEZ „Administration" i
-# „Secrets", więc nie może zarządzać ustawieniami repo, ochroną gałęzi ani
-# sekretami Actions. Po nadaniu App: Repository Administration RW + Secrets RW
-# (i ewentualnie Organization Administration RW do tworzenia repo) — odkomentuj
-# poniższe i dodaj wpisy `import` w imports.tf (repo istnieją → adopcja).
+# github.tf — repozytoria organizacji zarobkilekarzy (zaadoptowane).
+# Config = bieżący stan repo (generate-config-out); tofu = źródło prawdy dla
+# ustawień repo. Ochrona gałęzi main NIEzarządzana (patrz koniec pliku).
 
-/*
-resource "github_repository" "site" {
-  name       = "zarobkilekarzy.pl"
-  visibility = "public"
-  lifecycle {
-    ignore_changes = [description, topics, homepage_url, pages]
-  }
-}
 
 resource "github_repository" "fedrowanie" {
-  name       = "fedrowanie"
-  visibility = "public"
-  lifecycle {
-    ignore_changes = [description, topics, homepage_url]
+  allow_auto_merge            = false
+  allow_forking               = true
+  allow_merge_commit          = true
+  allow_rebase_merge          = true
+  allow_squash_merge          = true
+  allow_update_branch         = false
+  archive_on_destroy          = null
+  archived                    = false
+  auto_init                   = false
+  delete_branch_on_merge      = false
+  description                 = ""
+  gitignore_template          = null
+  has_discussions             = false
+  has_issues                  = true
+  has_projects                = true
+  has_wiki                    = true
+  homepage_url                = ""
+  is_template                 = false
+  license_template            = null
+  merge_commit_message        = "PR_TITLE"
+  merge_commit_title          = "MERGE_MESSAGE"
+  name                        = "fedrowanie"
+  source_owner                = ""
+  source_repo                 = ""
+  squash_merge_commit_message = "COMMIT_MESSAGES"
+  squash_merge_commit_title   = "COMMIT_OR_PR_TITLE"
+  topics                      = []
+  visibility                  = "public"
+  web_commit_signoff_required = false
+  security_and_analysis {
+    secret_scanning {
+      status = "disabled"
+    }
+    secret_scanning_push_protection {
+      status = "disabled"
+    }
   }
 }
 
 resource "github_repository" "infrastructure" {
-  name                   = "infrastructure"
-  description            = "OpenTofu — infrastruktura zarobkilekarzy.pl (Cloudflare + GitHub)."
-  visibility             = "public"
-  has_issues             = true
-  has_wiki               = false
-  has_projects           = false
-  delete_branch_on_merge = true
+  allow_auto_merge            = false
+  allow_forking               = true
+  allow_merge_commit          = true
+  allow_rebase_merge          = true
+  allow_squash_merge          = true
+  allow_update_branch         = false
+  archive_on_destroy          = null
+  archived                    = false
+  auto_init                   = false
+  delete_branch_on_merge      = false
+  description                 = ""
+  gitignore_template          = null
+  has_discussions             = false
+  has_issues                  = true
+  has_projects                = true
+  has_wiki                    = true
+  homepage_url                = ""
+  is_template                 = false
+  license_template            = null
+  merge_commit_message        = "PR_TITLE"
+  merge_commit_title          = "MERGE_MESSAGE"
+  name                        = "infrastructure"
+  source_owner                = ""
+  source_repo                 = ""
+  squash_merge_commit_message = "COMMIT_MESSAGES"
+  squash_merge_commit_title   = "COMMIT_OR_PR_TITLE"
+  topics                      = []
+  visibility                  = "public"
+  web_commit_signoff_required = false
+  security_and_analysis {
+    secret_scanning {
+      status = "disabled"
+    }
+    secret_scanning_push_protection {
+      status = "disabled"
+    }
+  }
 }
 
-# Sekrety Actions (deploy Pages) — zarządzane tylko gdy podasz wartość w
-# secrets.auto.tfvars (cloudflare_deploy_api_token).
+resource "github_repository" "site" {
+  allow_auto_merge            = false
+  allow_forking               = true
+  allow_merge_commit          = true
+  allow_rebase_merge          = true
+  allow_squash_merge          = true
+  allow_update_branch         = false
+  archive_on_destroy          = null
+  archived                    = false
+  auto_init                   = false
+  delete_branch_on_merge      = false
+  description                 = ""
+  gitignore_template          = null
+  has_discussions             = false
+  has_issues                  = true
+  has_projects                = false
+  has_wiki                    = false
+  homepage_url                = ""
+  is_template                 = false
+  license_template            = null
+  merge_commit_message        = "PR_TITLE"
+  merge_commit_title          = "MERGE_MESSAGE"
+  name                        = "zarobkilekarzy.pl"
+  source_owner                = ""
+  source_repo                 = ""
+  squash_merge_commit_message = "COMMIT_MESSAGES"
+  squash_merge_commit_title   = "COMMIT_OR_PR_TITLE"
+  topics                      = []
+  visibility                  = "public"
+  web_commit_signoff_required = false
+  security_and_analysis {
+    secret_scanning {
+      status = "disabled"
+    }
+    secret_scanning_push_protection {
+      status = "disabled"
+    }
+  }
+}
+
+# --- Sekrety Actions (deploy Pages) ---
+# Zarządzane tylko gdy podasz cloudflare_deploy_api_token w secrets.auto.tfvars
+# (inaczej count=0 — tofu nie dotyka istniejących sekretów CI).
 resource "github_actions_secret" "cf_api_token" {
   count           = var.cloudflare_deploy_api_token != "" ? 1 : 0
-  repository      = "zarobkilekarzy.pl"
+  repository      = github_repository.site.name
   secret_name     = "CLOUDFLARE_API_TOKEN"
   plaintext_value = var.cloudflare_deploy_api_token
 }
 
 resource "github_actions_secret" "cf_account_id" {
   count           = var.cloudflare_deploy_api_token != "" ? 1 : 0
-  repository      = "zarobkilekarzy.pl"
+  repository      = github_repository.site.name
   secret_name     = "CLOUDFLARE_ACCOUNT_ID"
   plaintext_value = var.cloudflare_account_id
 }
 
-# Ochrona gałęzi main — NIE modelować w ciemno: bieżąca ochrona dopuszcza push
-# automatyki (wyjątek od PR). Zaimportuj istniejącą regułę i odtwórz bypass,
-# zanim oddasz ją tofu, inaczej zablokujesz deploy.
-*/
+# --- Ochrona gałęzi main (NIEZARZĄDZANA) ---
+# Bieżąca ochrona dopuszcza push automatyki (wyjątek od PR). Błędne odwzorowanie
+# tego wyjątku zablokowałoby deploy — zaimportuj i odtwórz bypass (github_repository_ruleset
+# z bypass_actors) zanim oddasz ochronę tofu.

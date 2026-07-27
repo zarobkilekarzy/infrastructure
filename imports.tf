@@ -128,3 +128,17 @@ import {
   to = cloudflare_dns_record.spf
   id = "${var.cloudflare_zone_id}/269ef266bda8a29e109112ab33297036"
 }
+
+# --- GitHub (zaadoptowane) ---
+import {
+  to = github_repository.site
+  id = "zarobkilekarzy.pl"
+}
+import {
+  to = github_repository.fedrowanie
+  id = "fedrowanie"
+}
+import {
+  to = github_repository.infrastructure
+  id = "infrastructure"
+}
