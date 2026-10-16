@@ -74,6 +74,11 @@ import {
   id = "${var.cloudflare_zone_id}/automatic_https_rewrites"
 }
 
+import {
+  to = cloudflare_zone_setting.browser_cache_ttl
+  id = "${var.cloudflare_zone_id}/browser_cache_ttl"
+}
+
 # --- Turnstile ---
 import {
   to = cloudflare_turnstile_widget.site

@@ -11,7 +11,7 @@ w gitignorowanym `secrets.auto.tfvars`, a stan żyje lokalnie (poza gitem).
 |---|---|
 | **Cloudflare Workers** | domena `zarobkilekarzy.pl` przypięta do Workera `zarobkilekarzy` (Custom Domain); kod i pliki wgrywa CI repo strony |
 | **Cloudflare Pages** | projekt `zarobkilekarzy` (poprzedni hosting), KV `SONDA_KV`, D1 `zarobki-clicks` i `zarobki-egzamin` |
-| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), rekordy DNS (reguł cache strefy brak — `/api/egzamin` cache'uje sam Worker, Cache API) |
+| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), Browser Cache TTL („Respect Existing Headers”), rekordy DNS (reguł cache strefy brak — `/api/egzamin` cache'uje sam Worker, Cache API) |
 | **Cloudflare Email Routing** | włączenie, adres docelowy, reguła przekierowania |
 | **Cloudflare** | widżety Turnstile (sonda/petycja i niewidoczny dla modułu egzaminu) |
 | **GitHub** | repozytoria orgu, (opcjonalnie) sekrety Actions |

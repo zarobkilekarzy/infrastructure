@@ -42,3 +42,12 @@ resource "cloudflare_zone_setting" "auto_https_rewrites" {
   setting_id = "automatic_https_rewrites"
   value      = "on"
 }
+
+# Browser Cache TTL: 0 = „Respect Existing Headers” — przeglądarka dostaje Cache-Control
+# ustawiony przez serwis (generowane _headers, Worker). Domyślne 4 h (14400) nadpisywało
+# max-age trafień z cache Workera (GET /api/egzamin: 300 s → 4 h).
+resource "cloudflare_zone_setting" "browser_cache_ttl" {
+  zone_id    = var.cloudflare_zone_id
+  setting_id = "browser_cache_ttl"
+  value      = 0
+}
