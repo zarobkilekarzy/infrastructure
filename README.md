@@ -11,7 +11,7 @@ w gitignorowanym `secrets.auto.tfvars`, a stan żyje lokalnie (poza gitem).
 |---|---|
 | **Cloudflare Workers** | domena `zarobkilekarzy.pl` przypięta do Workera `zarobkilekarzy` (Custom Domain); kod i pliki wgrywa CI repo strony |
 | **Cloudflare Pages** | projekt `zarobkilekarzy` (poprzedni hosting), KV `SONDA_KV`, D1 `zarobki-clicks` i `zarobki-egzamin` |
-| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), rekordy DNS, reguły cache (cały zestaw — patrz `cloudflare_cache.tf`) |
+| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), rekordy DNS (reguł cache strefy brak — `/api/egzamin` cache'uje sam Worker, Cache API) |
 | **Cloudflare Email Routing** | włączenie, adres docelowy, reguła przekierowania |
 | **Cloudflare** | widżety Turnstile (sonda/petycja i niewidoczny dla modułu egzaminu) |
 | **GitHub** | repozytoria orgu, (opcjonalnie) sekrety Actions |
@@ -57,7 +57,6 @@ Ustaw dokładnie te uprawnienia (grupa „Edit" zawiera odczyt):
 | DNS | Edit | rekordy DNS |
 | Zone Settings | Edit | HSTS/SSL/TLS + włączenie Email Routing |
 | Email Routing Rules | Edit | reguła/catch-all |
-| Cache Rules | Edit | reguły cache strefy (cache brzegowy GET `/api/*`) |
 | Workers Routes | Edit | Custom Domain `zarobkilekarzy.pl` → Worker |
 | Zone | Read | odczyt strefy |
 

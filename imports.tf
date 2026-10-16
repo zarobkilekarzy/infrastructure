@@ -137,11 +137,3 @@ import {
   to = github_repository.infrastructure
   id = "infrastructure"
 }
-
-# --- Reguły cache strefy (faza http_request_cache_settings) ---
-# Zaadoptowany zestaw „default" z jedną regułą (cache brzegowy GET /api/*), wcześniej
-# utworzony w panelu. Kod w cloudflare_cache.tf odwzorowuje stan 1:1.
-import {
-  to = cloudflare_ruleset.cache
-  id = "zones/${var.cloudflare_zone_id}/8cd0c10befa34de6960b0b1abe061f43"
-}
