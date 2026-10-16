@@ -18,6 +18,18 @@ resource "cloudflare_d1_database" "clicks" {
   }
 }
 
+# D1 — anonimowe, zbiorcze wyniki modułu /egzamin-lek (binding EGZAMIN_DB).
+# Jeden wiersz na ukończony test: sesja, tryb, punkty, czas, dzień — bez IP,
+# bez identyfikatorów. Osobna baza, żeby liczniki przejść i wyniki egzaminu
+# miały niezależny cykl życia (czyszczenie/eksport jednej nie dotyka drugiej).
+resource "cloudflare_d1_database" "egzamin" {
+  account_id = var.cloudflare_account_id
+  name       = "zarobki-egzamin"
+  read_replication = {
+    mode = "disabled"
+  }
+}
+
 # Pages — projekt hostujący stronę. Assety wgrywa CI (`wrangler pages deploy`),
 # więc tofu pilnuje wyłącznie ISTNIENIA projektu i gałęzi produkcyjnej.
 #

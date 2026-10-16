@@ -90,11 +90,6 @@ import {
 # --- DNS (zaadoptowane) ---
 
 import {
-  to = cloudflare_dns_record.root
-  id = "${var.cloudflare_zone_id}/b6a15f78d53230ec151e56a8c2fb5128"
-}
-
-import {
   to = cloudflare_dns_record.mx3
   id = "${var.cloudflare_zone_id}/05e51443f9759a7d88365e97a3cbf918"
 }
@@ -141,4 +136,12 @@ import {
 import {
   to = github_repository.infrastructure
   id = "infrastructure"
+}
+
+# --- Reguły cache strefy (faza http_request_cache_settings) ---
+# Zaadoptowany zestaw „default" z jedną regułą (cache brzegowy GET /api/*), wcześniej
+# utworzony w panelu. Kod w cloudflare_cache.tf odwzorowuje stan 1:1.
+import {
+  to = cloudflare_ruleset.cache
+  id = "zones/${var.cloudflare_zone_id}/8cd0c10befa34de6960b0b1abe061f43"
 }

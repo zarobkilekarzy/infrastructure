@@ -9,10 +9,11 @@ w gitignorowanym `secrets.auto.tfvars`, a stan żyje lokalnie (poza gitem).
 
 | Obszar | Zasoby |
 |---|---|
-| **Cloudflare Pages** | projekt `zarobkilekarzy`, KV `SONDA_KV`, D1 `zarobki-clicks` |
-| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), rekordy DNS |
+| **Cloudflare Workers** | domena `zarobkilekarzy.pl` przypięta do Workera `zarobkilekarzy` (Custom Domain); kod i pliki wgrywa CI repo strony |
+| **Cloudflare Pages** | projekt `zarobkilekarzy` (poprzedni hosting), KV `SONDA_KV`, D1 `zarobki-clicks` i `zarobki-egzamin` |
+| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), rekordy DNS, reguły cache (cały zestaw — patrz `cloudflare_cache.tf`) |
 | **Cloudflare Email Routing** | włączenie, adres docelowy, reguła przekierowania |
-| **Cloudflare** | widżet Turnstile, site Web Analytics |
+| **Cloudflare** | widżety Turnstile (sonda/petycja i niewidoczny dla modułu egzaminu) |
 | **GitHub** | repozytoria orgu, (opcjonalnie) sekrety Actions |
 
 Świadomie **poza** kodem (patrz komentarze w plikach):
@@ -42,11 +43,12 @@ Ustaw dokładnie te uprawnienia (grupa „Edit" zawiera odczyt):
 **Permissions — Account** (Account Resources → *Include → konkretne konto*):
 | Grupa | Poziom | Po co |
 |---|---|---|
-| Account Settings | Edit | Turnstile, Web Analytics |
-| Turnstile | Edit | widżet Turnstile |
+| Account Settings | Read | odczyt konta przez provider |
+| Turnstile | Edit | widżety Turnstile |
 | Workers KV Storage | Edit | namespace `SONDA_KV` |
-| D1 | Edit | baza `zarobki-clicks` |
-| Cloudflare Pages | Edit | projekt Pages |
+| D1 | Edit | bazy `zarobki-clicks`, `zarobki-egzamin` |
+| Cloudflare Pages | Edit | projekt Pages, sekrety Pages (`wrangler pages secret put`) |
+| Workers (dawniej Workers Scripts) | Editor (dawniej Edit) | Custom Domain Workera, sekrety Workera (`wrangler secret put`) |
 | Email Routing Addresses | Edit | adres docelowy |
 
 **Permissions — Zone** (Zone Resources → *Include → Specific zone → zarobkilekarzy.pl*):
@@ -55,6 +57,8 @@ Ustaw dokładnie te uprawnienia (grupa „Edit" zawiera odczyt):
 | DNS | Edit | rekordy DNS |
 | Zone Settings | Edit | HSTS/SSL/TLS + włączenie Email Routing |
 | Email Routing Rules | Edit | reguła/catch-all |
+| Cache Rules | Edit | reguły cache strefy (cache brzegowy GET `/api/*`) |
+| Workers Routes | Edit | Custom Domain `zarobkilekarzy.pl` → Worker |
 | Zone | Read | odczyt strefy |
 
 Podajesz go przez środowisko (nie do tfvars):
@@ -63,7 +67,9 @@ export CLOUDFLARE_API_TOKEN="..."
 ```
 
 > Osobno: jeśli włączysz zarządzanie sekretem CI (`cloudflare_deploy_api_token`),
-> to **wartość** sekretu Actions do deployu Pages — może być węższa (Pages + KV + D1 Edit).
+> to **wartość** sekretu Actions do deployu — może być węższa: Workers **Admin**
+> (pierwszy `wrangler deploy` tworzy Workera; później wystarczy Editor). Uprawnień
+> do D1 deploy z bindingiem nie potrzebuje.
 
 ### 2. GitHub — uprawnienia App
 

@@ -11,3 +11,14 @@ resource "cloudflare_turnstile_widget" "site" {
   domains    = var.turnstile_domains
   mode       = "managed" # dopasuj do istniejącego trybu po imporcie
 }
+
+# Widżet NIEWIDOCZNY dla zapisu wyniku modułu /egzamin-lek: wynik wysyła się
+# automatycznie po zakończeniu testu, więc weryfikacja nie może wymagać kliknięcia.
+# Tryb jest cechą widżetu (nie wywołania), stąd osobny widżet. Klucz publiczny jest
+# zmienną Workera (wrangler.jsonc), sekretny — sekretem Workera TURNSTILE_EGZAMIN_SECRET_KEY.
+resource "cloudflare_turnstile_widget" "egzamin" {
+  account_id = var.cloudflare_account_id
+  name       = "zarobkilekarzy.pl — egzamin"
+  domains    = var.turnstile_domains
+  mode       = "invisible"
+}

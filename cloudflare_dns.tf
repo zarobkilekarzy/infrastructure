@@ -4,24 +4,8 @@
 # już jawny w DNS. Dlatego treści są literałami (zone_id pozostaje zmienną).
 
 
-resource "cloudflare_dns_record" "root" {
-  comment         = null
-  content         = "zarobkilekarzy.pages.dev"
-  data            = null
-  name            = "zarobkilekarzy.pl"
-  priority        = null
-  private_routing = null
-  proxied         = true
-  settings = {
-    flatten_cname = false
-    ipv4_only     = false
-    ipv6_only     = false
-  }
-  tags    = []
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = var.cloudflare_zone_id
-}
+# Rekord root (CNAME na zarobkilekarzy.pages.dev) usunięty przy przejściu z Pages na Workers:
+# rekord dla zarobkilekarzy.pl tworzy teraz Custom Domain Workera (cloudflare_workers_custom_domain.site).
 
 resource "cloudflare_dns_record" "mx3" {
   comment         = null
