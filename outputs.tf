@@ -20,6 +20,11 @@ output "d1_egzamin_database_id" {
   value       = cloudflare_d1_database.egzamin.id
 }
 
+output "d1_sor_database_id" {
+  description = "ID bazy D1 (zarobki-sor, kolejki na SOR) — publiczne; wpisywane w workers/sor/wrangler.jsonc repo strony."
+  value       = cloudflare_d1_database.sor.id
+}
+
 output "turnstile_egzamin_sitekey" {
   description = "Publiczny klucz niewidocznego widżetu Turnstile modułu egzaminu."
   value       = cloudflare_turnstile_widget.egzamin.sitekey

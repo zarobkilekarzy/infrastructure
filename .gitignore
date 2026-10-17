@@ -1,6 +1,8 @@
 # === STAN TOFU — zawiera sekrety i docelowy e-mail. NIGDY do repo. ===
 *.tfstate
 *.tfstate.*
+# zapisany plan (`plan -out=…`) niesie pełny stan, także wartości wrażliwe
+*.tfplan
 .terraform/
 crash.log
 crash.*.log

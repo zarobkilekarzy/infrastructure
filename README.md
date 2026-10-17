@@ -9,9 +9,10 @@ w gitignorowanym `secrets.auto.tfvars`, a stan żyje lokalnie (poza gitem).
 
 | Obszar | Zasoby |
 |---|---|
-| **Cloudflare Workers** | domena `zarobkilekarzy.pl` przypięta do Workera `zarobkilekarzy` (Custom Domain); kod i pliki wgrywa CI repo strony |
+| **Cloudflare Workers** | domena `zarobkilekarzy.pl` przypięta do Workera `zarobkilekarzy` (Custom Domain); kod i pliki wgrywa CI repo strony. Domena `dane.zarobkilekarzy.pl` → Worker `zarobkilekarzy-sor` (kolejki na SOR, `cloudflare_sor.tf`) |
 | **Cloudflare Pages** | projekt `zarobkilekarzy` (poprzedni hosting), KV `SONDA_KV`, D1 `zarobki-clicks` i `zarobki-egzamin` |
-| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), Browser Cache TTL („Respect Existing Headers”), rekordy DNS (reguł cache strefy brak — `/api/egzamin` cache'uje sam Worker, Cache API) |
+| **Cloudflare zona** | ustawienia bezpieczeństwa (HSTS, SSL, min TLS, always-HTTPS), Browser Cache TTL („Respect Existing Headers”), rekordy DNS (reguł cache strefy brak — `/api/egzamin` i `dane.zarobkilekarzy.pl/sor/teraz.json` cache'ują same Workery, Cache API) |
+| **Cloudflare D1** | `zarobki-sor` — migawka i archiwum kolejek na SOR (zapisuje Worker `zarobkilekarzy-sor` z repo strony) |
 | **Cloudflare Email Routing** | włączenie, adres docelowy, reguła przekierowania |
 | **Cloudflare** | widżety Turnstile (sonda/petycja i niewidoczny dla modułu egzaminu) |
 | **GitHub** | repozytoria orgu, (opcjonalnie) sekrety Actions |
@@ -46,9 +47,9 @@ Ustaw dokładnie te uprawnienia (grupa „Edit" zawiera odczyt):
 | Account Settings | Read | odczyt konta przez provider |
 | Turnstile | Edit | widżety Turnstile |
 | Workers KV Storage | Edit | namespace `SONDA_KV` |
-| D1 | Edit | bazy `zarobki-clicks`, `zarobki-egzamin` |
+| D1 | Edit | bazy `zarobki-clicks`, `zarobki-egzamin`, `zarobki-sor` |
 | Cloudflare Pages | Edit | projekt Pages, sekrety Pages (`wrangler pages secret put`) |
-| Workers (dawniej Workers Scripts) | Editor (dawniej Edit) | Custom Domain Workera, sekrety Workera (`wrangler secret put`) |
+| Workers (dawniej Workers Scripts) | Editor (dawniej Edit) | Custom Domain Workerów, sekrety Workera (`wrangler secret put`), wdrożenie Workera SOR |
 | Email Routing Addresses | Edit | adres docelowy |
 
 **Permissions — Zone** (Zone Resources → *Include → Specific zone → zarobkilekarzy.pl*):
@@ -57,7 +58,7 @@ Ustaw dokładnie te uprawnienia (grupa „Edit" zawiera odczyt):
 | DNS | Edit | rekordy DNS |
 | Zone Settings | Edit | HSTS/SSL/TLS + włączenie Email Routing |
 | Email Routing Rules | Edit | reguła/catch-all |
-| Workers Routes | Edit | Custom Domain `zarobkilekarzy.pl` → Worker |
+| Workers Routes | Edit | Custom Domain `zarobkilekarzy.pl` i `dane.zarobkilekarzy.pl` → Workery |
 | Zone | Read | odczyt strefy |
 
 Podajesz go przez środowisko (nie do tfvars):
