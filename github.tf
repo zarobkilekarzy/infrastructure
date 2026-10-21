@@ -123,6 +123,19 @@ resource "github_repository" "site" {
   }
 }
 
+# Skill dla agentów AI: asystent autorów tekstów dla serwisu (pliki tekstowe + skrypt podglądu)
+resource "github_repository" "writer_kit" {
+  name          = "zarobkilekarzy-writer-kit"
+  description   = "Skill dla Claude Code i Codex: asystent autora tekstów dla zarobkilekarzy.pl — zasady redakcyjne, styl, źródła"
+  homepage_url  = "https://zarobkilekarzy.pl"
+  visibility    = "public"
+  has_issues    = true
+  has_projects  = false
+  has_wiki      = false
+  allow_forking = true
+  auto_init     = false
+}
+
 # --- Sekrety Actions (deploy Pages) ---
 # Zarządzane tylko gdy podasz cloudflare_deploy_api_token w secrets.auto.tfvars
 # (inaczej count=0 — tofu nie dotyka istniejących sekretów CI).
