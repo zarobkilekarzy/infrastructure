@@ -120,8 +120,8 @@ import {
 }
 
 import {
-  to = cloudflare_dns_record.google_verify
-  id = "${var.cloudflare_zone_id}/a03a2928c86d51a17375ce8d4acf14f6"
+  to = cloudflare_dns_record.google_verify_sites
+  id = "${var.cloudflare_zone_id}/064d149aa0f15c65e402478724c3bff4"
 }
 
 import {

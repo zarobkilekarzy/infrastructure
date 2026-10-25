@@ -64,9 +64,10 @@ resource "cloudflare_dns_record" "mx1" {
   zone_id = var.cloudflare_zone_id
 }
 
-resource "cloudflare_dns_record" "google_verify" {
+# Token weryfikacji Google (Google Sites); poprzedni token usunięty 25.10.2026.
+resource "cloudflare_dns_record" "google_verify_sites" {
   comment         = null
-  content         = "\"google-site-verification=q1Ih7ghbglDo_Ml0LRljuuVky9kJFGyrARiPG5jKwh0\""
+  content         = "\"google-site-verification=_-rMJhu087xT8J8vXKREXuMmy7k-rbTnXBXKN7E0zjM\""
   data            = null
   name            = "zarobkilekarzy.pl"
   priority        = null
