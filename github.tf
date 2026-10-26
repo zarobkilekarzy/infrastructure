@@ -148,6 +148,18 @@ resource "github_repository" "branding" {
   auto_init     = false
 }
 
+# Silnik filmów, szablony, scenariusze i generatory (napisy, promo) — prywatne; pliki wideo poza repo
+resource "github_repository" "filmy" {
+  name          = "zarobkilekarzy-filmy"
+  description   = "Filmy zarobkilekarzy.pl: silnik, szablony, scenariusze, napisy i generatory"
+  homepage_url  = "https://zarobkilekarzy.pl"
+  visibility    = "private"
+  has_issues    = false
+  has_projects  = false
+  has_wiki      = false
+  auto_init     = false
+}
+
 # --- Sekrety Actions (deploy Pages) ---
 # Zarządzane tylko gdy podasz cloudflare_deploy_api_token w secrets.auto.tfvars
 # (inaczej count=0 — tofu nie dotyka istniejących sekretów CI).
